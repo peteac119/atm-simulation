@@ -9,10 +9,6 @@ import java.util.*;
 public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
     @Override
     public List<CashReport> process(int dispensingAmount, List<CashReport> availableCashReports) throws ATMException {
-        // Sort all notes to be descending order first.
-        Collections.sort(availableCashReports,
-                Comparator.comparingInt(CashReport::getValue).reversed());
-
         // Use the largest bank note first.
         Stack<CashReport> cashReportStack = new Stack<>();
         List<CashReport> cashResultReport = new ArrayList<>();

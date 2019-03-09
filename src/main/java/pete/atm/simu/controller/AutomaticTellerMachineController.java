@@ -34,7 +34,7 @@ public class AutomaticTellerMachineController {
     }
 
     @GetMapping(value = "/reset")
-    public void reset() throws Exception {
-        automaticTellerMachineService.reset();
+    public DispensingResultReport reset() throws Exception {
+        return automaticTellerMachineService.reset();
     }
 }

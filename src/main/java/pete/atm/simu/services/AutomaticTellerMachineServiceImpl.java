@@ -1,6 +1,7 @@
 package pete.atm.simu.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,13 +32,21 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
             throw new DispensingAmountOutOfRangeException();
         }
 
-        List<CashReport> availableCashReports = automaticTellerMachineRepository.findAll();
+        List<CashReport> availableCashReports = automaticTellerMachineRepository.findAll(Sort.by(Sort.Direction.DESC, "value"));
+
         DispensingProcessor dispensingProcessor = DispensingProcessorSelector.getDispensingProcessor();
         List<CashReport> dispensedCashReports = dispensingProcessor.process(dispensingAmount, availableCashReports);
+
         DispensingResultReport dispensingResultReport = new DispensingResultReport(availableCashReports, dispensedCashReports);
         automaticTellerMachineRepository.saveAll(availableCashReports);
         automaticTellerMachineRepository.flush();
         return dispensingResultReport;
+    }
+
+    @Override
+    public DispensingResultReport getAllAvaiableBankNote() {
+        List<CashReport> availableCashReports = automaticTellerMachineRepository.findAll(Sort.by(Sort.Direction.DESC, "value"));
+        return new DispensingResultReport(availableCashReports, null);
     }
 
     /**
@@ -46,8 +55,10 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
      * @throws Exception
      */
     @Override
-    public void reset() throws Exception {
+    public DispensingResultReport reset() throws Exception {
         new BootStrapData(this.automaticTellerMachineRepository).run(null);
+        List<CashReport> availableCashReports = automaticTellerMachineRepository.findAll(Sort.by(Sort.Direction.DESC, "value"));
+        return new DispensingResultReport(availableCashReports, null);
     }
 
 }

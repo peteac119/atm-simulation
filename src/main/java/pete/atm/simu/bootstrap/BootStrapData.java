@@ -27,8 +27,9 @@ public class BootStrapData implements CommandLineRunner {
      */
     @Override
     public void run(String... args) throws Exception{
-
         ApplicationLog.log("Start inserting cash report.");
+
+        automaticTellerMachineRepository.deleteAll();
 
         CashReport note1000 = new CashReport();
         note1000.setNoteType("1000 Note");
