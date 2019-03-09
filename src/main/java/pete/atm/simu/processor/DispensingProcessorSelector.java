@@ -1,5 +1,11 @@
 package pete.atm.simu.processor;
 
+/**
+ * Usually, this class is not necessary if we have only one logic for dispensing back note.
+ *
+ * However, if UI allows user to select what solution it wants, then this might get a choice from UI
+ * and select the most suitable solution for particular user's choice.
+ */
 public class DispensingProcessorSelector {
 
     private DispensingProcessorSelector(){}

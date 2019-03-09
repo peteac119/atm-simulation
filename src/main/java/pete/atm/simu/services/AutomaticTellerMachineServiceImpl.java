@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import pete.atm.simu.bootstrap.BootStrapData;
 import pete.atm.simu.entity.CashReport;
 import pete.atm.simu.exception.ATMException;
 import pete.atm.simu.exception.DispensingAmountOutOfRangeException;
@@ -39,8 +40,14 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
         return dispensingResultReport;
     }
 
+    /**
+     * This method is just for Web UI testing only.
+     *
+     * @throws Exception
+     */
     @Override
-    public List<CashReport> getAllCashes() {
-        return automaticTellerMachineRepository.findAll();
+    public void reset() throws Exception {
+        new BootStrapData(this.automaticTellerMachineRepository).run(null);
     }
+
 }
