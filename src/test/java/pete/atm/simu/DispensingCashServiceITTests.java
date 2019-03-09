@@ -16,7 +16,6 @@ import pete.atm.simu.exception.UnsupportedDispensingAmountException;
 import pete.atm.simu.model.DispensingResultReport;
 import pete.atm.simu.repositories.AutomaticTellerMachineRepository;
 import pete.atm.simu.services.AutomaticTellerMachineService;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,23 +175,22 @@ public class DispensingCashServiceITTests extends TestCase {
     }
 
     @Test
-    public void testAmountEndsWithTen() {
+    public void testUnsupportedDispensingAmountDueToUnMatchAmount() {
         // Populate test data
         List<CashReport> availableCashReports = new ArrayList<>();
 
+        availableCashReports.add(new CashReport(5L, "20 Note", 20, 5));
+        availableCashReports.add(new CashReport(4L, "50 Note", 50, 3));
         availableCashReports.add(new CashReport(1L, "1000 Note", 1000, 1));
         availableCashReports.add(new CashReport(2L, "500 Note", 500, 1));
         availableCashReports.add(new CashReport(3L, "100 Note", 100, 1));
-        availableCashReports.add(new CashReport(4L, "50 Note", 50, 3));
-        availableCashReports.add(new CashReport(5L, "20 Note", 20, 5));
-
 
         automaticTellerMachineRepository.saveAll(availableCashReports);
         automaticTellerMachineRepository.flush();
 
         try {
             automaticTellerMachineService.dispensingCash(1610);
-            fail("UnsupportedDispensingAmountException must not be thrown.");
+            fail("UnsupportedDispensingAmountException must be thrown.");
         }catch (ATMException ex){
             assertTrue(ex instanceof UnsupportedDispensingAmountException);
             assertEquals("Current notes that ATM has do not support this dispensing amount.", ex.getMessage());
@@ -210,6 +208,69 @@ public class DispensingCashServiceITTests extends TestCase {
             assertEquals(3, availableCashReports.get(3).getAvailableNotes().intValue());
             // note 20
             assertEquals(5, availableCashReports.get(4).getAvailableNotes().intValue());
+
+        }
+
+        try {
+            automaticTellerMachineService.dispensingCash(30);
+            fail("UnsupportedDispensingAmountException must be thrown.");
+        }catch (ATMException ex){
+            System.out.println("\n\n\n Type: " + ex.getClass().getSimpleName());
+            assertTrue(ex instanceof UnsupportedDispensingAmountException);
+            assertEquals("Current notes that ATM has do not support this dispensing amount.", ex.getMessage());
+
+            availableCashReports = automaticTellerMachineRepository.findAll(Sort.by(Sort.Direction.DESC, "value"));
+
+            // No note is decreased.
+            // note 1000
+            assertEquals(1, availableCashReports.get(0).getAvailableNotes().intValue());
+            // note 500
+            assertEquals(1, availableCashReports.get(1).getAvailableNotes().intValue());
+            // note 100
+            assertEquals(1, availableCashReports.get(2).getAvailableNotes().intValue());
+            // note 50
+            assertEquals(3, availableCashReports.get(3).getAvailableNotes().intValue());
+            // note 20
+            assertEquals(5, availableCashReports.get(4).getAvailableNotes().intValue());
+
+        }
+    }
+
+    @Test
+    public void testUnsupportedDispensingAmountDueToLackOfNotes() {
+        // Populate test data
+        List<CashReport> availableCashReports = new ArrayList<>();
+
+        availableCashReports.add(new CashReport(3L, "100 Note", 100, 0));
+        availableCashReports.add(new CashReport(4L, "50 Note", 50, 0));
+        availableCashReports.add(new CashReport(5L, "20 Note", 20, 1));
+        availableCashReports.add(new CashReport(1L, "1000 Note", 1000, 0));
+        availableCashReports.add(new CashReport(2L, "500 Note", 500, 0));
+
+        automaticTellerMachineRepository.saveAll(availableCashReports);
+        automaticTellerMachineRepository.flush();
+
+        try {
+            automaticTellerMachineService.dispensingCash(40);
+            fail("UnsupportedDispensingAmountException must be thrown.");
+        }catch (ATMException ex){
+            System.out.println("\n\n\n Type: " + ex.getClass().getSimpleName());
+            assertTrue(ex instanceof UnsupportedDispensingAmountException);
+            assertEquals("Current notes that ATM has do not support this dispensing amount.", ex.getMessage());
+
+            availableCashReports = automaticTellerMachineRepository.findAll(Sort.by(Sort.Direction.DESC, "value"));
+
+            // No note is decreased.
+            // note 1000
+            assertEquals(0, availableCashReports.get(0).getAvailableNotes().intValue());
+            // note 500
+            assertEquals(0, availableCashReports.get(1).getAvailableNotes().intValue());
+            // note 100
+            assertEquals(0, availableCashReports.get(2).getAvailableNotes().intValue());
+            // note 50
+            assertEquals(0, availableCashReports.get(3).getAvailableNotes().intValue());
+            // note 20
+            assertEquals(1, availableCashReports.get(4).getAvailableNotes().intValue());
 
         }
     }

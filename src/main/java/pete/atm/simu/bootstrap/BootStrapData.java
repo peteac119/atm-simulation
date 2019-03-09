@@ -55,10 +55,10 @@ public class BootStrapData implements CommandLineRunner {
         note20.setAvailableNotes(1);
 
         automaticTellerMachineRepository.save(note1000);
-        automaticTellerMachineRepository.save(note500);
-        automaticTellerMachineRepository.save(note100);
         automaticTellerMachineRepository.save(note50);
         automaticTellerMachineRepository.save(note20);
+        automaticTellerMachineRepository.save(note500);
+        automaticTellerMachineRepository.save(note100);
 
         System.out.println("ATM has some cash now.");
     }

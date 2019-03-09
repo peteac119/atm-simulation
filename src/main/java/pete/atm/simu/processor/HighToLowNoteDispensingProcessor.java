@@ -2,7 +2,6 @@ package pete.atm.simu.processor;
 
 import pete.atm.simu.entity.CashReport;
 import pete.atm.simu.exception.ATMException;
-import pete.atm.simu.exception.InsufficientNotesException;
 import pete.atm.simu.exception.UnsupportedDispensingAmountException;
 
 import java.util.*;
@@ -57,9 +56,6 @@ public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
     }
 
     private void restackNotes(Stack<CashReport> cashSlotStack, int dispensingAmount, List<CashReport> availableCashReports) throws ATMException {
-        if (cashSlotStack.isEmpty() && dispensingAmount != 0){
-            throw new InsufficientNotesException("Insufficient note for this dispensing amount.");
-        }
 
         CashReport lowestNote = cashSlotStack.pop();
         CashReport biggerNote = cashSlotStack.pop();
@@ -81,16 +77,16 @@ public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
 
         while(dispensingAmount > 0){
             lowestNote.setAvailableNotes(lowestNote.getAvailableNotes() + 1);
-            if(availableLowestNote.getAvailableNotes() >= 0){
+            if(availableLowestNote.getAvailableNotes() > 0){
                 availableLowestNote.setAvailableNotes(availableLowestNote.getAvailableNotes() - 1);
                 dispensingAmount -= lowestNote.getValue();
             }else{
-                throw new UnsupportedDispensingAmountException("Current notes that ATM has do not support this dispensing amount.");
+                throw new UnsupportedDispensingAmountException();
             }
         }
 
         if (dispensingAmount < 0){
-            throw new UnsupportedDispensingAmountException("Current notes that ATM has do not support this dispensing amount.");
+            throw new UnsupportedDispensingAmountException();
         }
 
         cashSlotStack.push(lowestNote);

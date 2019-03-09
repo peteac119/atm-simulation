@@ -27,7 +27,7 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = ATMException.class)
     public DispensingResultReport dispensingCash(int dispensingAmount) throws ATMException {
         if (dispensingAmount < 20 || dispensingAmount > 30000){
-            throw new DispensingAmountOutOfRangeException("Dispensing amount must be in between 20 and 30000.");
+            throw new DispensingAmountOutOfRangeException();
         }
 
         System.out.println("Inside method");
