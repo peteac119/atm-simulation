@@ -2,9 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>ATM Simulation</title>
+    <style>
+    table, th, td {
+      border: 1px solid black;
+    }
+    </style>
 </head>
 <body>
-Hello World
+<h1>ATM Available Bank Notes</h1>
+<table id="bankNoteTable" style="border: 1px solid black;">
+    <tr>
+        <th>BankNote</th>
+        <th>Number of Available Note</th>
+    </tr>
+</table>
+<p id="totalAvailableAmount"></p>
+<form name="amount" action="" method="GET">
+    Dispensing Amount: <input type="text" name="dispensingAmount"><br>
+    <input type="button" name="button" value="submit" onClick="submitClick(this.form)">
+</form>
+
+<div id="result"></div>
+
 </body>
+<script src="script.js"></script>
 </html>

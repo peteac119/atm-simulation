@@ -33,6 +33,11 @@ public class AutomaticTellerMachineController {
         return dispensingResultReport;
     }
 
+    @GetMapping(value = "/allbanknote", produces = MediaType.APPLICATION_JSON_VALUE)
+    public DispensingResultReport getAllAvailableBankNote(){
+        return automaticTellerMachineService.getAllAvaiableBankNote();
+    }
+
     @GetMapping(value = "/reset")
     public DispensingResultReport reset() throws Exception {
         return automaticTellerMachineService.reset();
