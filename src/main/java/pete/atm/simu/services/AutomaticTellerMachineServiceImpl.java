@@ -30,10 +30,7 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
             throw new DispensingAmountOutOfRangeException();
         }
 
-        System.out.println("Inside method");
-        System.out.println("dispensingAmount: " + dispensingAmount);
         List<CashReport> availableCashReports = automaticTellerMachineRepository.findAll();
-        System.out.println("Get data from DB. " + availableCashReports);
         DispensingProcessor dispensingProcessor = DispensingProcessorSelector.getDispensingProcessor();
         List<CashReport> dispensedCashReports = dispensingProcessor.process(dispensingAmount, availableCashReports);
         DispensingResultReport dispensingResultReport = new DispensingResultReport(availableCashReports, dispensedCashReports);

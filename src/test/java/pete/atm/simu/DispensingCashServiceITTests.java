@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {AtmApplication.class})
+@SpringBootTest(classes = AtmApplication.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
 @ActiveProfiles("test")
 public class DispensingCashServiceITTests extends TestCase {
@@ -215,7 +215,6 @@ public class DispensingCashServiceITTests extends TestCase {
             automaticTellerMachineService.dispensingCash(30);
             fail("UnsupportedDispensingAmountException must be thrown.");
         }catch (ATMException ex){
-            System.out.println("\n\n\n Type: " + ex.getClass().getSimpleName());
             assertTrue(ex instanceof UnsupportedDispensingAmountException);
             assertEquals("Current notes that ATM has do not support this dispensing amount.", ex.getMessage());
 
@@ -254,7 +253,6 @@ public class DispensingCashServiceITTests extends TestCase {
             automaticTellerMachineService.dispensingCash(40);
             fail("UnsupportedDispensingAmountException must be thrown.");
         }catch (ATMException ex){
-            System.out.println("\n\n\n Type: " + ex.getClass().getSimpleName());
             assertTrue(ex instanceof UnsupportedDispensingAmountException);
             assertEquals("Current notes that ATM has do not support this dispensing amount.", ex.getMessage());
 

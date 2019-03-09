@@ -1,6 +1,7 @@
 package pete.atm.simu.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +26,7 @@ public class AutomaticTellerMachineController {
         this.automaticTellerMachineService = automaticTellerMachineService;
     }
 
-    @GetMapping("/{amount}")
+    @GetMapping(value = "/{amount}", produces = MediaType.APPLICATION_JSON_VALUE)
     public DispensingResultReport getDispensingCashByAmount(@PathVariable String amount) throws ATMException {
         Integer dispensingAmount = Integer.parseInt(amount);
         return automaticTellerMachineService.dispensingCash(dispensingAmount);

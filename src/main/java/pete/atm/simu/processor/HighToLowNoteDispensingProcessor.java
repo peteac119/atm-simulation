@@ -10,8 +10,6 @@ public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
     @Override
     public List<CashReport> process(int dispensingAmount, List<CashReport> availableCashReports) throws ATMException {
 
-        System.out.println("Inside process. Parameter: " + dispensingAmount + ", " + availableCashReports);
-
         Collections.sort(availableCashReports,
                 Comparator.comparingInt(CashReport::getValue).reversed());
 
@@ -39,9 +37,6 @@ public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
             cashReportStack.push(dispensedCashReport);
         }
 
-        System.out.println("Get amount left: " + dispensingAmount);
-        System.out.println("Available Note: " + availableCashReports);
-
         if (dispensingAmount > 0){
             restackNotes(cashReportStack, dispensingAmount, availableCashReports);
         }
@@ -49,8 +44,6 @@ public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
         while(!cashReportStack.isEmpty()){
             cashResultReport.add(cashReportStack.pop());
         }
-
-        System.out.println("Get Result back. " + cashResultReport + "\n\n");
 
         return cashResultReport;
     }

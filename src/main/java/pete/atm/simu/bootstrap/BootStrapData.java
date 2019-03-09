@@ -27,8 +27,6 @@ public class BootStrapData implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        System.out.println("Loading more cash to ATM.");
-
         CashReport note1000 = new CashReport();
         note1000.setNoteType("1000 Note");
         note1000.setValue(1000);
@@ -59,7 +57,5 @@ public class BootStrapData implements CommandLineRunner {
         automaticTellerMachineRepository.save(note20);
         automaticTellerMachineRepository.save(note500);
         automaticTellerMachineRepository.save(note100);
-
-        System.out.println("ATM has some cash now.");
     }
 }
