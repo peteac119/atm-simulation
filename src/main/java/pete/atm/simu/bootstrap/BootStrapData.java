@@ -2,11 +2,13 @@ package pete.atm.simu.bootstrap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import pete.atm.simu.entity.CashReport;
 import pete.atm.simu.repositories.AutomaticTellerMachineRepository;
 
 @Component
+@Profile("!test")
 public class BootStrapData implements CommandLineRunner {
 
     private final AutomaticTellerMachineRepository automaticTellerMachineRepository;

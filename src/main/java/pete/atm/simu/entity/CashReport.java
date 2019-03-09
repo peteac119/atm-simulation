@@ -1,11 +1,9 @@
 package pete.atm.simu.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "cash_report")
 public class CashReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,6 +11,15 @@ public class CashReport {
     private String noteType;
     private Integer value;
     private Integer availableNotes;
+
+    public CashReport() {}
+
+    public CashReport(Long id, String noteType, Integer value, Integer availableNotes) {
+        this.id = id;
+        this.noteType = noteType;
+        this.value = value;
+        this.availableNotes = availableNotes;
+    }
 
     public Long getId() {
         return id;

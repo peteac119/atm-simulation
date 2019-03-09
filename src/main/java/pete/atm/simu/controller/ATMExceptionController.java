@@ -10,8 +10,12 @@ import pete.atm.simu.exception.ATMException;
 public class ATMExceptionController {
     @ExceptionHandler(value = ATMException.class)
     public ResponseEntity<Object> exception(ATMException exception) {
-        System.out.println("handler got trigger");
-        System.out.println("Type: " + exception.getClass().getSimpleName());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = NumberFormatException.class)
+    public ResponseEntity<Object> exception(NumberFormatException exception) {
+        String errorMessage = "The amount must be integer in between 20 and 30000.";
+        return new ResponseEntity<>(errorMessage, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

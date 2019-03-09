@@ -18,8 +18,12 @@ public class AutomaticTellerMachineController {
 
     public static final String BASE_URL = "/api/atm";
 
+    private final AutomaticTellerMachineService automaticTellerMachineService;
+
     @Autowired
-    private AutomaticTellerMachineService automaticTellerMachineService;
+    public AutomaticTellerMachineController(AutomaticTellerMachineService automaticTellerMachineService){
+        this.automaticTellerMachineService = automaticTellerMachineService;
+    }
 
     @GetMapping("/{amount}")
     public DispensingResultReport getDispensingCashByAmount(@PathVariable String amount) throws ATMException {

@@ -2,21 +2,19 @@ package pete.atm.simu.processor;
 
 import pete.atm.simu.entity.CashReport;
 import pete.atm.simu.exception.ATMException;
-import pete.atm.simu.exception.DispensingAmountIsNegativeException;
 import pete.atm.simu.exception.InsufficientNotesException;
 import pete.atm.simu.exception.UnsupportedDispensingAmountException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
     @Override
     public List<CashReport> process(int dispensingAmount, List<CashReport> availableCashReports) throws ATMException {
 
-        if (dispensingAmount <= 0){
-            throw new DispensingAmountIsNegativeException("Dispensing amount must be positive integer.");
-        }
+        System.out.println("Inside process. Parameter: " + dispensingAmount + ", " + availableCashReports);
+
+        Collections.sort(availableCashReports,
+                Comparator.comparingInt(CashReport::getValue).reversed());
 
         Stack<CashReport> cashReportStack = new Stack<>();
         List<CashReport> cashResultReport = new ArrayList<>();
@@ -25,22 +23,25 @@ public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
             int expectedNumOfNotes = dispensingAmount / availableCashReport.getValue();
             int actualNumOfNotes = availableCashReport.getAvailableNotes() - expectedNumOfNotes;
 
-            CashReport newCashReport = new CashReport();
-            newCashReport.setNoteType(availableCashReport.getNoteType());
-            newCashReport.setValue(availableCashReport.getValue());
+            CashReport dispensedCashReport = new CashReport();
+            dispensedCashReport.setNoteType(availableCashReport.getNoteType());
+            dispensedCashReport.setValue(availableCashReport.getValue());
 
             if (actualNumOfNotes >= 0){
-                newCashReport.setAvailableNotes(expectedNumOfNotes);
+                dispensedCashReport.setAvailableNotes(expectedNumOfNotes);
                 availableCashReport.setAvailableNotes(actualNumOfNotes);
                 dispensingAmount -= availableCashReport.getValue() * expectedNumOfNotes;
             }else{
-                newCashReport.setAvailableNotes(availableCashReport.getAvailableNotes());
+                dispensedCashReport.setAvailableNotes(availableCashReport.getAvailableNotes());
                 availableCashReport.setAvailableNotes(0);
                 dispensingAmount -= availableCashReport.getValue() * availableCashReport.getAvailableNotes();
             }
 
-            cashReportStack.push(newCashReport);
+            cashReportStack.push(dispensedCashReport);
         }
+
+        System.out.println("Get amount left: " + dispensingAmount);
+        System.out.println("Available Note: " + availableCashReports);
 
         if (dispensingAmount > 0){
             restackNotes(cashReportStack, dispensingAmount, availableCashReports);
@@ -50,7 +51,9 @@ public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
             cashResultReport.add(cashReportStack.pop());
         }
 
-        return cashReportStack;
+        System.out.println("Get Result back. " + cashResultReport + "\n\n");
+
+        return cashResultReport;
     }
 
     private void restackNotes(Stack<CashReport> cashSlotStack, int dispensingAmount, List<CashReport> availableCashReports) throws ATMException {
@@ -77,9 +80,9 @@ public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
                 .findFirst().get();
 
         while(dispensingAmount > 0){
-            availableLowestNote.setAvailableNotes(availableLowestNote.getAvailableNotes() - 1);
             lowestNote.setAvailableNotes(lowestNote.getAvailableNotes() + 1);
             if(availableLowestNote.getAvailableNotes() >= 0){
+                availableLowestNote.setAvailableNotes(availableLowestNote.getAvailableNotes() - 1);
                 dispensingAmount -= lowestNote.getValue();
             }else{
                 throw new UnsupportedDispensingAmountException("Current notes that ATM has do not support this dispensing amount.");

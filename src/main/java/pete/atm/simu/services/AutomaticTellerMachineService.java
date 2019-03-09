@@ -6,7 +6,7 @@ import pete.atm.simu.model.DispensingResultReport;
 import java.util.List;
 
 public interface AutomaticTellerMachineService {
-    DispensingResultReport dispensingCash(int total) throws ATMException;
+    DispensingResultReport dispensingCash(int dispensingAmount) throws ATMException;
 
     List<CashReport> getAllCashes();
 }

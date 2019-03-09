@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import pete.atm.simu.entity.CashReport;
 import pete.atm.simu.exception.ATMException;
+import pete.atm.simu.exception.DispensingAmountOutOfRangeException;
 import pete.atm.simu.model.DispensingResultReport;
 import pete.atm.simu.processor.DispensingProcessor;
 import pete.atm.simu.processor.DispensingProcessorSelector;
@@ -23,13 +24,21 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = ATMException.class)
     public DispensingResultReport dispensingCash(int dispensingAmount) throws ATMException {
+        if (dispensingAmount < 20 || dispensingAmount > 30000){
+            throw new DispensingAmountOutOfRangeException("Dispensing amount must be in between 20 and 30000.");
+        }
+
+        System.out.println("Inside method");
+        System.out.println("dispensingAmount: " + dispensingAmount);
         List<CashReport> availableCashReports = automaticTellerMachineRepository.findAll();
+        System.out.println("Get data from DB. " + availableCashReports);
         DispensingProcessor dispensingProcessor = DispensingProcessorSelector.getDispensingProcessor();
         List<CashReport> dispensedCashReports = dispensingProcessor.process(dispensingAmount, availableCashReports);
         DispensingResultReport dispensingResultReport = new DispensingResultReport(availableCashReports, dispensedCashReports);
         automaticTellerMachineRepository.saveAll(availableCashReports);
+        automaticTellerMachineRepository.flush();
         return dispensingResultReport;
     }
 
