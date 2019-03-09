@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pete.atm.simu.entity.CashReport;
+import pete.atm.simu.exception.ATMException;
+import pete.atm.simu.model.DispensingResultReport;
 import pete.atm.simu.services.AutomaticTellerMachineService;
 
 import java.util.List;
@@ -20,7 +22,7 @@ public class AutomaticTellerMachineController {
     private AutomaticTellerMachineService automaticTellerMachineService;
 
     @GetMapping("/{amount}")
-    public List<CashReport> getDispensingCashByAmount(@PathVariable String amount){
+    public DispensingResultReport getDispensingCashByAmount(@PathVariable String amount) throws ATMException {
         Integer dispensingAmount = Integer.parseInt(amount);
         return automaticTellerMachineService.dispensingCash(dispensingAmount);
     }

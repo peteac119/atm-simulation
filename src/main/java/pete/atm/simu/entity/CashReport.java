@@ -22,11 +22,11 @@ public class CashReport {
         this.id = id;
     }
 
-    public String getNoteName() {
+    public String getNoteType() {
         return noteType;
     }
 
-    public void setNoteName(String noteType) {
+    public void setNoteType(String noteType) {
         this.noteType = noteType;
     }
 
@@ -60,7 +60,7 @@ public class CashReport {
 
     @Override
     public String toString() {
-        return "AutomaticTellerMachine{" +
+        return "CashReport{" +
                 "id=" + id +
                 ", noteName='" + noteType + '\'' +
                 ", value=" + value +

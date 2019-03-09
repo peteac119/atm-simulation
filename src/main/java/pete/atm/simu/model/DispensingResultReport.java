@@ -19,4 +19,12 @@ public class DispensingResultReport {
     public List<CashReport> getDispensedCashReports() {
         return dispensedCashReports;
     }
+
+    @Override
+    public String toString() {
+        return "DispensingResultReport{" +
+                "availableCashReports=" + availableCashReports +
+                ", dispensedCashReports=" + dispensedCashReports +
+                '}';
+    }
 }
