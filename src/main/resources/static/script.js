@@ -21,78 +21,89 @@ function reset(){
 
 }
 
-function submitClick(form){
-    let dispensingAmount = form.dispensingAmount.value;
-    fetch(url + "/" + dispensingAmount)
+function dispensing(amount){
+    var hasError = false;
+
+    fetch(url + "/" + amount)
     .then((resp) => resp.json())
     .then(function(data){
 
         let resultSection = document.getElementById("result");
-        removeAllChildren(resultSection);
+        resultSection.value = '';
+        resultSection.style.color = "black";
 
         if (data.error != null ){
-            let errorPara = createNode("p");
-            errorPara.innerHTML = data.error;
-            append(resultSection, errorPara);
+            resultSection.value = data.error
+            resultSection.style.color = "red";
+            hasError = true;
             return
         }
 
-        let availableBankNotes = data.availableCashReports;
-        let dispensedBankNotes = data.dispensedCashReports;
-        var totalAmount = 0;
+        let dispensedBankNotes = data.cashReports;
 
-        availableBankNotes.map(function(availableBankNote) {
-            let tdNumOfBankNote = document.getElementById(availableBankNote.value);
-            tdNumOfBankNote.innerHTML = availableBankNote.availableNotes;
-            totalAmount += availableBankNote.value * availableBankNote.availableNotes
+        dispensedBankNotes.forEach(function(dispensedBankNote){
+            resultSection.value += dispensedBankNote.noteType;
+            resultSection.value += " = ";
+            resultSection.value += dispensedBankNote.availableNotes;
+            resultSection.value += "\n";
         })
+    })
+    .catch(function(error) {
+        alert(JSON.stringify(error))
+    })
 
-        let totalPara = document.getElementById("totalAvailableAmount");
-        totalPara.innerHTML = "Total of Available Amount: " + totalAmount;
-//
-//         let table = createNode('table');
-//         let firstRow = createNode('tr');
-//         let firstHeader = createNode('th');
-//         let secondHeader = createNode('th');
-//
-//         firstHeader.innerHTML = "Bank Note";
-//         secondHeader.innerHTML = "Dispensed"
-//
-//        dispensedBankNotes.map(function(dispensedBankNote) {
-//            paragraph.innerHTML = dispensedBankNote.
-//            resultSection.innerHTML =
-//        })
+    return hasError;
+}
+
+function getAllAvailableNotes(handlerFunc){
+    fetch(url + "/allbanknote")
+    .then((resp) => resp.json())
+    .then(function(data){
+        let reports = data.cashReports;
+        handlerFunc(reports);
     })
     .catch(function(error) {
         alert(JSON.stringify(error))
     })
 }
 
-const ul = document.getElementById("bankNoteTable");
+function submitClick(form){
+    let dispensingAmount = form.dispensingAmount.value;
+    var error = dispensing(dispensingAmount);
+    if (!error){
+        getAllAvailableNotes(function(updatedAvailableBankNotes){
+            var totalAmount = 0;
+            updatedAvailableBankNotes.map(function(updatedAvailableBankNote) {
+                let tdNumOfBankNote = document.getElementById(updatedAvailableBankNote.value);
+                tdNumOfBankNote.innerHTML = updatedAvailableBankNote.availableNotes;
+                totalAmount += updatedAvailableBankNote.value * updatedAvailableBankNote.availableNotes
+            })
 
-fetch(url + "/allbanknote")
-.then((resp) => resp.json())
-.then(function(data){
-    let availableBankNotes = data.availableCashReports;
+            let totalPara = document.getElementById("totalAvailableAmount");
+            totalPara.innerHTML = "Total of Available Amount: " + totalAmount;
+        });
+    }
+}
+
+getAllAvailableNotes(function(availableBankNoteList){
+    const ul = document.getElementById("bankNoteTable");
     var totalAmount = 0;
-    availableBankNotes.map(function(availableBankNote) {
+
+    availableBankNoteList.map(function(availableNote) {
         let tr = createNode('tr'),
         tdBankNote = createNode('td'),
         tdNumOfBankNote = createNode('td');
 
-        tdNumOfBankNote.id = availableBankNote.value
+        tdNumOfBankNote.id = availableNote.value
 
-        tdBankNote.innerHTML = availableBankNote.value;
-        tdNumOfBankNote.innerHTML = availableBankNote.availableNotes;
+        tdBankNote.innerHTML = availableNote.value;
+        tdNumOfBankNote.innerHTML = availableNote.availableNotes;
         append(tr, tdBankNote);
         append(tr, tdNumOfBankNote);
         append(ul, tr);
 
-        totalAmount += availableBankNote.value * availableBankNote.availableNotes;
+        totalAmount += availableNote.value * availableNote.availableNotes;
     })
     let totalPara = document.getElementById("totalAvailableAmount");
     totalPara.innerHTML = "Total of Available Amount: " + totalAmount;
-})
-.catch(function(error) {
-    alert(JSON.stringify(error))
-})
+});
