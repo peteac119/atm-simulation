@@ -18,12 +18,26 @@ function removeAllChildren(parent)
 }
 
 function reset(){
+    fetch(url + "/reset")
+    .then((resp) => resp.json())
+    .then(function(data){
+        let resetReports= data.cashReports();
+        var totalAmount = 0;
+        resetReports.map(function(resetReport) {
+            let tdNumOfBankNote = document.getElementById(resetReport.value);
+            tdNumOfBankNote.innerHTML = resetReport.availableNotes;
+            totalAmount += resetReport.value * resetReport.availableNotes
+        })
 
+        let totalPara = document.getElementById("totalAvailableAmount");
+        totalPara.innerHTML = "Total of Available Amount: " + totalAmount;
+    })
+    .catch(function(error) {
+        alert(JSON.stringify(error))
+    })
 }
 
 function dispensing(amount){
-    var hasError = false;
-
     fetch(url + "/" + amount)
     .then((resp) => resp.json())
     .then(function(data){
@@ -47,12 +61,22 @@ function dispensing(amount){
             resultSection.value += dispensedBankNote.availableNotes;
             resultSection.value += "\n";
         })
+
+        getAllAvailableNotes(function(updatedAvailableBankNotes){
+            var totalAmount = 0;
+            updatedAvailableBankNotes.map(function(updatedAvailableBankNote) {
+                let tdNumOfBankNote = document.getElementById(updatedAvailableBankNote.value);
+                tdNumOfBankNote.innerHTML = updatedAvailableBankNote.availableNotes;
+                totalAmount += updatedAvailableBankNote.value * updatedAvailableBankNote.availableNotes
+            })
+
+            let totalPara = document.getElementById("totalAvailableAmount");
+            totalPara.innerHTML = "Total of Available Amount: " + totalAmount;
+        });
     })
     .catch(function(error) {
         alert(JSON.stringify(error))
     })
-
-    return hasError;
 }
 
 function getAllAvailableNotes(handlerFunc){
@@ -69,20 +93,7 @@ function getAllAvailableNotes(handlerFunc){
 
 function submitClick(form){
     let dispensingAmount = form.dispensingAmount.value;
-    var error = dispensing(dispensingAmount);
-    if (!error){
-        getAllAvailableNotes(function(updatedAvailableBankNotes){
-            var totalAmount = 0;
-            updatedAvailableBankNotes.map(function(updatedAvailableBankNote) {
-                let tdNumOfBankNote = document.getElementById(updatedAvailableBankNote.value);
-                tdNumOfBankNote.innerHTML = updatedAvailableBankNote.availableNotes;
-                totalAmount += updatedAvailableBankNote.value * updatedAvailableBankNote.availableNotes
-            })
-
-            let totalPara = document.getElementById("totalAvailableAmount");
-            totalPara.innerHTML = "Total of Available Amount: " + totalAmount;
-        });
-    }
+    dispensing(dispensingAmount);
 }
 
 getAllAvailableNotes(function(availableBankNoteList){
