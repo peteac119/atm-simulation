@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -53,8 +54,7 @@ public class ATMControllerITTests extends TestCase {
         Gson g = new Gson();
         DispensingResultReport dispensingResultReport = g.fromJson(response.getBody(), DispensingResultReport.class);
 
-        assertNull(dispensingResultReport.getAvailableCashReports());
-        assertNull(dispensingResultReport.getDispensedCashReports());
+        assertNull(dispensingResultReport.getCashReports());
         assertEquals("Dispensing amount must be in between 20 and 30000.", dispensingResultReport.getError());
     }
 
@@ -81,8 +81,7 @@ public class ATMControllerITTests extends TestCase {
         Gson g = new Gson();
         DispensingResultReport dispensingResultReport = g.fromJson(response.getBody(), DispensingResultReport.class);
 
-        assertNull(dispensingResultReport.getAvailableCashReports());
-        assertNull(dispensingResultReport.getDispensedCashReports());
+        assertNull(dispensingResultReport.getCashReports());
         assertEquals("Current notes that ATM has do not support this dispensing amount.", dispensingResultReport.getError());
     }
 
@@ -113,11 +112,10 @@ public class ATMControllerITTests extends TestCase {
         System.out.println(dispensingResultReport);
 
         assertNull(dispensingResultReport.getError());
-        assertNotNull(dispensingResultReport.getAvailableCashReports());
-        assertNotNull(dispensingResultReport.getDispensedCashReports());
+        assertNotNull(dispensingResultReport.getCashReports());
 
-        List<CashReport> availableCashReports = dispensingResultReport.getAvailableCashReports();
-        List<CashReport> dispensingResultReports = dispensingResultReport.getDispensedCashReports();
+        List<CashReport> availableCashReports = automaticTellerMachineRepository.findAll(Sort.by(Sort.Direction.DESC, "value"));
+        List<CashReport> dispensingResultReports = dispensingResultReport.getCashReports();
 
         // Assert available cash report response
         // Note 1000

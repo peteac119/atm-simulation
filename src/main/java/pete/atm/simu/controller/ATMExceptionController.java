@@ -16,7 +16,7 @@ public class ATMExceptionController {
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity<DispensingResultReport> exception(Exception exception) {
         ApplicationLog.log("Exception is thrown: " + exception);
-        DispensingResultReport errorReport = new DispensingResultReport(null, null);
+        DispensingResultReport errorReport = new DispensingResultReport(null);
         errorReport.setError(exception.getMessage());
         return new ResponseEntity<>(errorReport, HttpStatus.BAD_REQUEST);
     }

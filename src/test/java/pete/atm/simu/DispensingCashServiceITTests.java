@@ -47,7 +47,7 @@ public class DispensingCashServiceITTests extends TestCase {
 
         try {
             DispensingResultReport actualResult = automaticTellerMachineService.dispensingCash(1670);
-            List<CashReport> dispensedCashReports= actualResult.getDispensedCashReports();
+            List<CashReport> dispensedCashReports= actualResult.getCashReports();
 
             // All note types must be used exactly one.
             dispensedCashReports.forEach(dispensedCashReport -> {
@@ -89,7 +89,7 @@ public class DispensingCashServiceITTests extends TestCase {
 
         try {
             DispensingResultReport actualResult = automaticTellerMachineService.dispensingCash(1690);
-            List<CashReport> dispensedCashReports= actualResult.getDispensedCashReports();
+            List<CashReport> dispensedCashReports= actualResult.getCashReports();
 
             // The lower note type must cover the bigger note if ATM does not have the bigger notes.
             for (CashReport dispensedCashReport : dispensedCashReports){
@@ -147,7 +147,7 @@ public class DispensingCashServiceITTests extends TestCase {
 
         try {
             DispensingResultReport actualResult = automaticTellerMachineService.dispensingCash(80);
-            List<CashReport> dispensedCashReports= actualResult.getDispensedCashReports();
+            List<CashReport> dispensedCashReports= actualResult.getCashReports();
 
             // The lower note type must cover the bigger note if ATM does not have the bigger notes.
             for (CashReport dispensedCashReport : dispensedCashReports){

@@ -37,7 +37,7 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
         DispensingProcessor dispensingProcessor = DispensingProcessorSelector.getDispensingProcessor();
         List<CashReport> dispensedCashReports = dispensingProcessor.process(dispensingAmount, availableCashReports);
 
-        DispensingResultReport dispensingResultReport = new DispensingResultReport(availableCashReports, dispensedCashReports);
+        DispensingResultReport dispensingResultReport = new DispensingResultReport(dispensedCashReports);
         automaticTellerMachineRepository.saveAll(availableCashReports);
         automaticTellerMachineRepository.flush();
         return dispensingResultReport;
@@ -46,7 +46,7 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
     @Override
     public DispensingResultReport getAllAvaiableBankNote() {
         List<CashReport> availableCashReports = automaticTellerMachineRepository.findAll(Sort.by(Sort.Direction.DESC, "value"));
-        return new DispensingResultReport(availableCashReports, null);
+        return new DispensingResultReport(availableCashReports);
     }
 
     /**
@@ -58,7 +58,7 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
     public DispensingResultReport reset() throws Exception {
         new BootStrapData(this.automaticTellerMachineRepository).run(null);
         List<CashReport> availableCashReports = automaticTellerMachineRepository.findAll(Sort.by(Sort.Direction.DESC, "value"));
-        return new DispensingResultReport(availableCashReports, null);
+        return new DispensingResultReport(availableCashReports);
     }
 
 }
