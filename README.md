@@ -17,7 +17,7 @@ Techstack of Spring that I use in this project is:
 
 # Requirement
 - Java JDK 8 (jdk1.8.0_201)
-- Maven version 3.6 or above
+- Maven version 3.5.2 or above
 - Chrome browser is recommended. You can use other web browsers, but not IE.
 
 # Clone the project from GitHub
@@ -26,9 +26,11 @@ It only has master branch.
 
 # How to run unit test
 1. Please go inside project folder where pom.xml is.
-2. Run "mvn test". It will run all unit test in the project.
+2. Run "mvn test". It will run all unit tests in the project.
 
 # How to build and run app
+Please make sure that port 8080 is available.
+
 1. Please go inside project folder where pom.xml is.
 2. Run "mvn clean install". What will happen is Maven will build, run unit test and start web server.
 3. To access to Web UI, please open your browser and add "http://localhost:8080/"
