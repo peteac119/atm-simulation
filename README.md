@@ -2,12 +2,16 @@
 Cash Dispensing Simulation in ATM for test
 
 # Project Explanation
-I have planned to create Web UI for this test project, so I need web framework that can support web application and provide basic database engine to save my data.
 
-So I have decided to implement Spring Boot in this test project. 
-Spring Boot provides all basic web service features 
-like in-memory database, URL Mapping with view controller 
-and simplify the web development with Spring framework application.
+My solution to do cash dispensing is to use the biggest bank note first and use the lower bank note later.
+
+To simplify a usage (or testing) of this application, I have planned to create Web UI calling web services to retrieve data and
+ show the result on UI. In summary, I need web framework that run as web services and also provide UI to a user.
+
+As a result, Spring Boot is the choice for me for this test project. 
+
+Spring Boot provides all basic web service features, in-memory database and URL Mapping with view controller. 
+It also simplifies the web development with Spring framework application.
 
 It helps me finish this project faster and make me have enough time to do Web UI.
 Techstack of Spring that I use in this project is:
