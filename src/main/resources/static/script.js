@@ -10,18 +10,11 @@ function append(parent, element)
     return parent.appendChild(element);
 }
 
-function removeAllChildren(parent)
-{
-    while (parent.firstChild) {
-        parent.removeChild(parent.firstChild);
-    }
-}
-
 function reset(){
     fetch(url + "/reset")
     .then((resp) => resp.json())
     .then(function(data){
-        let resetReports= data.cashReports();
+        let resetReports= data.cashReports;
         var totalAmount = 0;
         resetReports.map(function(resetReport) {
             let tdNumOfBankNote = document.getElementById(resetReport.value);
@@ -31,6 +24,10 @@ function reset(){
 
         let totalPara = document.getElementById("totalAvailableAmount");
         totalPara.innerHTML = "Total of Available Amount: " + totalAmount;
+
+        let resultSection = document.getElementById("result");
+        resultSection.value = 'Result shows here.';
+        resultSection.style.color = "black";
     })
     .catch(function(error) {
         alert(JSON.stringify(error))

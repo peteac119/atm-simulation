@@ -14,6 +14,7 @@
         width: 400px;
         resize: none;
         margin-top: 10px;
+        display: block;
     }
     </style>
 </head>
@@ -28,12 +29,12 @@
 <p id="totalAvailableAmount"></p>
 <form name="amount" action="" method="GET">
     Dispensing Amount: <input type="text" name="dispensingAmount"><br>
-    <input type="button" value="submit" onClick="submitClick(this.form)" style="margin-top: 10px;">
-    <input type="button" value="reset" onClick="reset()" style="margin-top: 10px;">
+    <input type="button" value="submit" onclick="submitClick(this.form)" style="margin-top: 10px;">
 </form>
-
-<textarea id="result" name="comment">Result shows here.</textarea>
-
+<div>
+    <textarea id="result" name="comment">Result shows here.</textarea>
+    <input type="button" value="reset" onclick="reset()" style="margin-top: 10px;">
+</div>
 </body>
 <script src="script.js"></script>
 </html>
