@@ -17,6 +17,10 @@ function removeAllChildren(parent)
     }
 }
 
+function reset(){
+
+}
+
 function submitClick(form){
     let dispensingAmount = form.dispensingAmount.value;
     fetch(url + "/" + dispensingAmount)
