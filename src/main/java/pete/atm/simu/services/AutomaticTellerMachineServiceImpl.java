@@ -26,7 +26,7 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = ATMException.class)
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public DispensingResultReport dispensingCash(int dispensingAmount) throws ATMException {
         if (dispensingAmount < 20 || dispensingAmount > 30000){
             throw new DispensingAmountOutOfRangeException();
