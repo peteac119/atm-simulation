@@ -132,6 +132,65 @@ public class DispensingCashServiceITTests extends TestCase {
     }
 
     @Test
+    public void testDispensingWithLargeAmount() {
+        // Populate test data
+        List<CashReport> availableCashReports = new ArrayList<>();
+
+        // No note 1000 and 100 this time
+        availableCashReports.add(new CashReport(1L, "1000 Note", 1000, 4));
+        availableCashReports.add(new CashReport(2L, "500 Note", 500, 14));
+        availableCashReports.add(new CashReport(3L, "100 Note", 100, 44));
+        availableCashReports.add(new CashReport(4L, "50 Note", 50, 64));
+        availableCashReports.add(new CashReport(5L, "20 Note", 20, 69));
+
+        automaticTellerMachineRepository.saveAll(availableCashReports);
+        automaticTellerMachineRepository.flush();
+
+        try {
+            DispensingResultReport actualResult = automaticTellerMachineService.dispensingCash(19000);
+            List<CashReport> dispensedCashReports= actualResult.getCashReports();
+
+            // The lower note type must cover the bigger note if ATM does not have the bigger notes.
+            for (CashReport dispensedCashReport : dispensedCashReports){
+                switch (dispensedCashReport.getValue()){
+                    case 1000:
+                        assertEquals(4 ,dispensedCashReport.getAvailableNotes().intValue());
+                        break;
+                    case 500:
+                        assertEquals(14 ,dispensedCashReport.getAvailableNotes().intValue());
+                        break;
+                    case 100:
+                        assertEquals(44 ,dispensedCashReport.getAvailableNotes().intValue());
+                        break;
+                    case 50:
+                        assertEquals(64 ,dispensedCashReport.getAvailableNotes().intValue());
+                        break;
+                    case 20:
+                        assertEquals(20 ,dispensedCashReport.getAvailableNotes().intValue());
+                        break;
+                }
+
+            }
+
+            // Assert that each note in ATM has been decreased due to dispensing.
+            availableCashReports = automaticTellerMachineRepository.findAll(Sort.by(Sort.Direction.DESC, "value"));
+            // note 1000
+            assertEquals(0, availableCashReports.get(0).getAvailableNotes().intValue());
+            // note 500
+            assertEquals(0, availableCashReports.get(1).getAvailableNotes().intValue());
+            // note 100
+            assertEquals(0, availableCashReports.get(2).getAvailableNotes().intValue());
+            // note 50
+            assertEquals(0, availableCashReports.get(3).getAvailableNotes().intValue());
+            // note 20
+            assertEquals(49, availableCashReports.get(4).getAvailableNotes().intValue());
+
+        }catch (Exception ex){
+            fail("Exception must not be thrown.");
+        }
+    }
+
+    @Test
     public void testAmountEndsWithEighty() {
         // Populate test data
         List<CashReport> availableCashReports = new ArrayList<>();

@@ -27,8 +27,8 @@ public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
                 dispensingAmount -= availableCashReport.getValue() * expectedNumOfNotes;
             }else{
                 dispensedCashReport.setAvailableNotes(availableCashReport.getAvailableNotes());
-                availableCashReport.setAvailableNotes(0);
                 dispensingAmount -= availableCashReport.getValue() * availableCashReport.getAvailableNotes();
+                availableCashReport.setAvailableNotes(0);
             }
 
             cashReportStack.push(dispensedCashReport);
