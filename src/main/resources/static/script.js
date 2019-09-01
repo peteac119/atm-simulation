@@ -35,7 +35,7 @@ function reset(){
 }
 
 function dispensing(amount){
-    fetch(url + "/" + amount)
+    fetch(url + "/process/" + amount)
     .then((resp) => resp.json())
     .then(function(data){
 
@@ -77,7 +77,7 @@ function dispensing(amount){
 }
 
 function getAllAvailableNotes(handlerFunc){
-    fetch(url + "/allbanknote")
+    fetch(url + "/all_bank_note")
     .then((resp) => resp.json())
     .then(function(data){
         let reports = data.cashReports;
@@ -95,7 +95,7 @@ function submitClick(form){
 
 getAllAvailableNotes(function(availableBankNoteList){
     const ul = document.getElementById("bankNoteTable");
-    var totalAmount = 0;
+    let totalAmount = 0;
 
     availableBankNoteList.map(function(availableNote) {
         let tr = createNode('tr'),

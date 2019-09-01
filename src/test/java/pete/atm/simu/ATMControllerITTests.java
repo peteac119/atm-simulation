@@ -32,8 +32,8 @@ import java.util.List;
 @ActiveProfiles("test")
 public class ATMControllerITTests extends TestCase {
 
-    private TestRestTemplate restTemplate = new TestRestTemplate();
-    private HttpEntity<String> entity = new HttpEntity<>(null, new HttpHeaders());
+    private final TestRestTemplate restTemplate = new TestRestTemplate();
+    private final HttpEntity<String> entity = new HttpEntity<>(null, new HttpHeaders());
 
     @LocalServerPort
     private int port;
@@ -48,7 +48,7 @@ public class ATMControllerITTests extends TestCase {
     @Test
     public void testDispensingAmountOutOfRangeErrorResponse() {
         ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/atm/10"),
+                createURLWithPort("/api/atm/process/10"),
                 HttpMethod.GET, this.entity, String.class);
 
         Gson g = new Gson();
@@ -75,7 +75,7 @@ public class ATMControllerITTests extends TestCase {
         automaticTellerMachineRepository.flush();
 
         ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/atm/40"),
+                createURLWithPort("/api/atm/process/40"),
                 HttpMethod.GET, this.entity, String.class);
 
         Gson g = new Gson();
@@ -103,7 +103,7 @@ public class ATMControllerITTests extends TestCase {
 
         // Call API to assert the result from controller.
         ResponseEntity<String> response = restTemplate.exchange(
-                createURLWithPort("/api/atm/1690"),
+                createURLWithPort("/api/atm/process/1690"),
                 HttpMethod.GET, this.entity, String.class);
 
         Gson g = new Gson();

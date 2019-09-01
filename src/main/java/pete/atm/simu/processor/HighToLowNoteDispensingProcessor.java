@@ -6,7 +6,7 @@ import pete.atm.simu.exception.UnsupportedDispensingAmountException;
 
 import java.util.*;
 
-public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
+class HighToLowNoteDispensingProcessor implements DispensingProcessor{
     @Override
     public List<CashReport> process(int dispensingAmount, List<CashReport> availableCashReports) throws ATMException {
         // Use the largest bank note first.
@@ -52,27 +52,32 @@ public class HighToLowNoteDispensingProcessor implements DispensingProcessor{
         CashReport biggerNote = cashSlotStack.pop();
 
         if (biggerNote.getAvailableNotes() > 0){
-            CashReport availableBiggerNote = availableCashReports.stream()
+            Optional<CashReport> availableBiggerNote = availableCashReports.stream()
                     .filter(cashReport -> cashReport.getNoteType().equals(biggerNote.getNoteType()))
-                    .findFirst().get();
-            biggerNote.setAvailableNotes(biggerNote.getAvailableNotes() - 1);
-            availableBiggerNote.setAvailableNotes(availableBiggerNote.getAvailableNotes() + 1);
-            dispensingAmount += biggerNote.getValue();
+                    .findFirst();
+
+            if (availableBiggerNote.isPresent()){
+                biggerNote.setAvailableNotes(biggerNote.getAvailableNotes() - 1);
+                availableBiggerNote.get().setAvailableNotes(availableBiggerNote.get().getAvailableNotes() + 1);
+                dispensingAmount += biggerNote.getValue();
+            }
         }
 
         cashSlotStack.push(biggerNote);
 
-        CashReport availableLowestNote = availableCashReports.stream()
+        Optional<CashReport> availableLowestNote = availableCashReports.stream()
                 .filter(cashReport -> cashReport.getNoteType().equals(lowestNote.getNoteType()))
-                .findFirst().get();
+                .findFirst();
 
         while(dispensingAmount > 0){
             lowestNote.setAvailableNotes(lowestNote.getAvailableNotes() + 1);
-            if(availableLowestNote.getAvailableNotes() > 0){
-                availableLowestNote.setAvailableNotes(availableLowestNote.getAvailableNotes() - 1);
-                dispensingAmount -= lowestNote.getValue();
-            }else{
-                throw new UnsupportedDispensingAmountException();
+            if (availableLowestNote.isPresent()) {
+                if (availableLowestNote.get().getAvailableNotes() > 0) {
+                    availableLowestNote.get().setAvailableNotes(availableLowestNote.get().getAvailableNotes() - 1);
+                    dispensingAmount -= lowestNote.getValue();
+                } else {
+                    throw new UnsupportedDispensingAmountException();
+                }
             }
         }
 

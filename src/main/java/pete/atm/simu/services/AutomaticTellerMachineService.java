@@ -6,7 +6,7 @@ import pete.atm.simu.model.DispensingResultReport;
 public interface AutomaticTellerMachineService {
     DispensingResultReport dispensingCash(int dispensingAmount) throws ATMException;
 
-    DispensingResultReport getAllAvaiableBankNote();
+    DispensingResultReport getAllAvailableBankNote();
 
     DispensingResultReport reset() throws Exception;
 }

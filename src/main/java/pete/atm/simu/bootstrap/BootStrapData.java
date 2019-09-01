@@ -1,16 +1,24 @@
 package pete.atm.simu.bootstrap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import pete.atm.simu.ApplicationLog;
 import pete.atm.simu.entity.CashReport;
 import pete.atm.simu.repositories.AutomaticTellerMachineRepository;
 
+import java.util.Arrays;
+
+/**
+ * Runner class to populate testing data for the application on live environment.
+ */
 @Component
 @Profile("!test")
 public class BootStrapData implements CommandLineRunner {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BootStrapData.class);
 
     private final AutomaticTellerMachineRepository automaticTellerMachineRepository;
 
@@ -23,11 +31,10 @@ public class BootStrapData implements CommandLineRunner {
      * Initial data on H2 database while the application is starting up.
      *
      * @param args
-     * @throws Exception
      */
     @Override
-    public void run(String... args) throws Exception{
-        ApplicationLog.log("Start inserting cash report.");
+    public void run(String... args) {
+        LOGGER.info("Start inserting cash report.");
 
         automaticTellerMachineRepository.deleteAll();
 
@@ -56,14 +63,12 @@ public class BootStrapData implements CommandLineRunner {
         note20.setValue(20);
         note20.setAvailableNotes(100);
 
-        automaticTellerMachineRepository.save(note1000);
-        automaticTellerMachineRepository.save(note50);
-        automaticTellerMachineRepository.save(note20);
-        automaticTellerMachineRepository.save(note500);
-        automaticTellerMachineRepository.save(note100);
+        automaticTellerMachineRepository.saveAll(
+                Arrays.asList(note1000, note500, note100, note50, note20)
+        );
 
         automaticTellerMachineRepository.flush();
 
-        ApplicationLog.log("Finish inserting cash report.");
+        LOGGER.info("Finish inserting cash report.");
     }
 }

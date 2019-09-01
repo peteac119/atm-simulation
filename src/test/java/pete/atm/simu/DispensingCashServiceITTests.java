@@ -50,9 +50,7 @@ public class DispensingCashServiceITTests extends TestCase {
             List<CashReport> dispensedCashReports= actualResult.getCashReports();
 
             // All note types must be used exactly one.
-            dispensedCashReports.forEach(dispensedCashReport -> {
-                assertEquals(1, dispensedCashReport.getAvailableNotes().intValue());
-            });
+            dispensedCashReports.forEach(dispensedCashReport -> assertEquals(1, dispensedCashReport.getAvailableNotes().intValue()));
 
             // Assert that each note in ATM has been decreased due to dispensing.
             availableCashReports = automaticTellerMachineRepository.findAll(Sort.by(Sort.Direction.DESC, "value"));
