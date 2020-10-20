@@ -1,5 +1,5 @@
 # ATM-Simulation (Cash Dispensing only)
-Cash Dispensing Simulation in ATM.
+Cash Dispensing Simulation in ATM. This project is specifically for my past job interview purpose.
 
 # Project Explanation
 My solution for cash dispensing is to use the biggest bank note first and use the lower bank note later.
