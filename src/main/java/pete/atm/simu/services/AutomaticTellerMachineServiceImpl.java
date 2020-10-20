@@ -34,7 +34,7 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
         return dispensingAmount < 20 || dispensingAmount > 30000;
     }
 
-    private List<CashReport> findAllAvailableBankNote(){
+    private List<CashReport> findAllAvailableBankNoteSortedByValueDesc(){
         return automaticTellerMachineRepository.findAll(Sort.by(Sort.Direction.DESC, "value"));
     }
 
@@ -47,7 +47,7 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
             throw new DispensingAmountOutOfRangeException();
         }
 
-        List<CashReport> availableCashReports = findAllAvailableBankNote();
+        List<CashReport> availableCashReports = findAllAvailableBankNoteSortedByValueDesc();
 
         DispensingProcessor dispensingProcessor = DispensingProcessorSelector.getDispensingProcessor();
         List<CashReport> dispensedCashReports = dispensingProcessor.process(dispensingAmount, availableCashReports);
@@ -62,7 +62,7 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
 
     @Override
     public DispensingResultReport getAllAvailableBankNote() {
-        List<CashReport> availableCashReports = findAllAvailableBankNote();
+        List<CashReport> availableCashReports = findAllAvailableBankNoteSortedByValueDesc();
         return new DispensingResultReport(availableCashReports);
     }
 
@@ -72,7 +72,7 @@ public class AutomaticTellerMachineServiceImpl implements AutomaticTellerMachine
     @Override
     public DispensingResultReport reset() {
         new BootStrapData(this.automaticTellerMachineRepository).run((String) null);
-        List<CashReport> availableCashReports = findAllAvailableBankNote();
+        List<CashReport> availableCashReports = findAllAvailableBankNoteSortedByValueDesc();
         return new DispensingResultReport(availableCashReports);
     }
 
