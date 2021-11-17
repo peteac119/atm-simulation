@@ -1,6 +1,8 @@
 FROM maven:3.8.3-jdk-8 as build
 MAINTAINER Pichan Vasantakitkumjorn
 
+LABEL stage=builder
+
 COPY src /app/src
 COPY pom.xml /app
 WORKDIR /app
