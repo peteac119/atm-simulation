@@ -2,6 +2,7 @@ HELP.md
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 *.versionsBackup
+ansible
 
 ### STS ###
 .apt_generated

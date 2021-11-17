@@ -5,7 +5,6 @@ COPY src /app/src
 COPY pom.xml /app
 WORKDIR /app
 RUN mvn clean package
-CMD ["java", "-Xms128m", "-jar", "cash-dispensing-web.jar"]
 
 
 FROM openjdk:8-jdk-slim as runner
