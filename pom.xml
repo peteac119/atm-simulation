@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>pete.atm.simu</groupId>
 	<artifactId>cash-dispensing</artifactId>
-	<version>1.0.5-SNAPSHOT</version>
+	<version>1.0.6-SNAPSHOT</version>
 	<name>atm</name>
 	<description>Cash Dispensing Simulation in ATM</description>
 	<packaging>jar</packaging>
